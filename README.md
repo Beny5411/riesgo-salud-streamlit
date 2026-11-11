@@ -1,42 +1,52 @@
-# Nivel de riesgo en datos sintéticos de salud
+# Proyecto de diabetes
 
-**Minería de Datos · Beny Niebles y Geiser Guerrero**
+**Beny Niebles y Geiser Guerrero · Minería de Datos**
 
-Prototipo académico para clasificar un registro simulado como de riesgo bajo, medio o alto. La aplicación presenta tres visualizaciones exploratorias, valida las entradas del formulario y muestra la predicción y las probabilidades por clase. El conjunto proviene del material docente `Dataset_Sintetico_Salud_.xlsx`. Sus registros y etiquetas son sintéticos.
+Aplicación académica que continúa `Notebook_Diabetes_Avance2.ipynb`. Clasifica registros mediante Outcome 0 y Outcome 1, con las ocho variables del proyecto de diabetes. El notebook actualizado es `Modelado.ipynb`.
 
-## Ejecutar la aplicación
+[Abrir la aplicación](https://riesgo-salud-beny-geiser.streamlit.app/)
 
-Con Python 3.12, desde la carpeta del repositorio:
+## Datos y reproducción
+
+El archivo `diabetes-dataset.csv` se recuperó de la fuente registrada en el segundo avance. Coinciden sus 2.000 filas, 9 columnas, 1.256 duplicados, 744 filas únicas y las métricas originales de regresión logística. La procedencia se atribuye al registro del grupo y a la página de descarga. El archivo sustituyó al planteado en el primer avance. [Fuente de Kaggle](https://www.kaggle.com/datasets/vikasukani/diabetes-data-set)
+
+Con Python 3.12, instala las dependencias y ejecuta la aplicación.
 
 ```sh
 python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-En Streamlit Community Cloud, selecciona el repositorio, la rama `main` y el archivo `app.py`. Usa Python 3.12. La aplicación carga `pipeline.joblib` y muestra las métricas y los agregados de `resultados.json`.
+Para reproducir la revisión y guardar el pipeline completo, ejecuta `python revision.py` o las celdas de `Modelado.ipynb` en orden. La aplicación carga el archivo serializado y los resultados calculados. La regla que trata ceros como ausencias, la imputación, el escalado y el clasificador se guardan en el pipeline.
 
-## Modelo y evaluación
+## Revisión del tercer corte
 
-Se conserva la regresión logística del notebook de modelado. La división original asigna el 75 % de los registros a entrenamiento y el 25 % a prueba, con estratificación por nivel de riesgo. Se retiran duplicados exactos y se excluye el identificador del paciente. La imputación, el escalado y la codificación categórica se ajustan con los datos de entrenamiento y se guardan junto con el clasificador.
+La regresión logística original tuvo recall de 0,510 y F1 de 0,598 para Outcome 1. Se conservaron la división estratificada original y la semilla 42. Se compararon una línea base mayoritaria, los dos modelos originales y regresiones logísticas con pesos de clase equilibrados y C de 0,1, 1 y 10.
 
-La regresión logística fue seleccionada por su F1 macro, su desempeño por clase y la validación cruzada frente al árbol de decisión. En la aplicación se reporta una validación cruzada de cinco particiones calculada solo con el conjunto de entrenamiento. La matriz de confusión y las demás métricas finales corresponden al conjunto de prueba. El modelo reproduce patrones de una etiqueta sintética y carece de validación clínica.
+La selección empleó el F1 medio de cinco particiones estratificadas del conjunto de entrenamiento. Se eligió la logística equilibrada con C=10, F1 de validación de 0,662 ± 0,068. La diferencia con las otras variantes equilibradas es pequeña y no demuestra una superioridad estadísticamente concluyente.
 
-Para regenerar los archivos, abre `Modelado.ipynb` con el Excel en la misma carpeta y ejecuta las celdas en orden, incluida la sección final **Exportación a Streamlit**.
+| Métrica en prueba | Logística original | Modelo publicado |
+| --- | --- | --- |
+| Accuracy | 0,765 | 0,745 |
+| Precisión de Outcome 1 | 0,722 | 0,618 |
+| Recall de Outcome 1 | 0,510 | 0,667 |
+| F1 de Outcome 1 | 0,598 | 0,642 |
+| Falsos negativos | 25 | 17 |
+| Falsos positivos | 10 | 21 |
 
-## Pruebas locales
+El ajuste detecta más positivos y aumenta las falsas alarmas. El F1 sigue por debajo de 0,70. La prueba ya había sido evaluada en el segundo avance, por lo que constituye una referencia comparativa y la validación externa continúa pendiente. La aplicación muestra estos resultados y limitaciones.
 
-| Entrada | Resultado observado |
-| --- | --- |
-| Valores iniciales del formulario | Riesgo Bajo y probabilidades de las tres clases |
-| Edad de −1 | La aplicación mostró un error de rango |
-| Texto en el campo de edad | La aplicación solicitó un número entero |
-| Registro de prueba con índice 314 | Clase real Medio. El notebook y la aplicación predijeron Medio |
+Se corrigió además la interpretación escrita de las matrices originales. La logística tenía 10 falsos positivos y el bosque 13, coherentes con los reportes guardados, en lugar de los 14 y 16 que decía el texto.
 
-El F1 macro en prueba fue de 0,859. En la clase Alta, el modelo detectó 30 de 33 registros. Los tres restantes quedaron en la clase Media.
+## Limitaciones y uso
+
+Prototipo académico que no sustituye una decisión profesional. Las etiquetas se presentan según la codificación del dataset. Faltan detalles sobre el origen y las unidades de algunas variables. Hay numerosas mediciones ausentes de insulina y pliegue cutáneo. Las probabilidades carecen de calibración clínica. El formulario utiliza la escala del dataset y permite omitir las cinco mediciones que el notebook trata como ausentes.
 
 ## Uso de inteligencia artificial
 
-- **Herramienta y propósito.** OpenAI Codex revisó los archivos del curso, reprodujo el clasificador y preparó la interfaz y la documentación del despliegue.
-- **Prompt principal.** «Realiza el trabajo que se solicita, pregúntame lo que necesites saber», en referencia a la actividad de despliegue en Streamlit y sus recursos adjuntos.
-- **Problema identificado.** El notebook de EDA se adjuntó como posible base del despliegue, pero contiene la exploración de los datos. Se localizó el notebook de modelado que contiene los nombres del grupo y la carga del Excel correspondiente. La coincidencia con la entrega oficial queda sujeta a la revisión del grupo.
-- **Ajustes y verificación.** Se conservó el clasificador y se incorporaron el reporte de validación cruzada sobre entrenamiento, la exportación del pipeline y el formulario con restricciones basadas en los datos de entrenamiento. Se ejecutaron las celdas de código y se verificó el comportamiento del formulario con las pruebas indicadas arriba.
+- Herramienta utilizada, OpenAI Codex.
+- Propósito, revisar el modelo del segundo corte, adaptar la aplicación, verificar los resultados y desplegarla.
+- Prompt principal, «Realiza el trabajo que se solicita, pregúntame lo que necesites saber». La actualización del archivo de referencia se solicitó con «Dale con este que te acabo de enviar», acompañada de `Notebook_Diabetes_Avance2.ipynb`.
+- Problemas encontrados, la primera aplicación se había construido con la actividad guiada sobre riesgo sintético. Al recibir el notebook del proyecto se adaptó al objetivo Outcome. Se detectaron conteos de falsos positivos incorrectos en la interpretación escrita y resultados insuficientes en recall y F1.
+- Ajustes realizados, incorporación del tratamiento de ceros al pipeline, comparación por validación cruzada, pesos de clase, regularización, validación del formulario y corrección de los conteos.
+- Verificación, reproducción de las métricas originales, comparación de matrices, ejecución de pruebas del formulario y comparación de un registro de prueba entre el notebook y el pipeline serializado. La revisión y comprensión por parte de ambos integrantes corresponde al grupo.
