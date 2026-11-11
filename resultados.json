@@ -1,0 +1,166 @@
+{
+  "classes": [
+    "Bajo",
+    "Medio",
+    "Alto"
+  ],
+  "fields": {
+    "Edad": {
+      "min": 18,
+      "max": 85,
+      "default": 47,
+      "integer": true
+    },
+    "Genero": {
+      "options": [
+        "Femenino",
+        "Masculino",
+        "Otro/No reporta"
+      ]
+    },
+    "IMC": {
+      "min": 17.0,
+      "max": 58.2,
+      "default": 26.7,
+      "integer": false
+    },
+    "Glucosa_mg_dL": {
+      "min": 62,
+      "max": 336,
+      "default": 103,
+      "integer": true
+    },
+    "Presion_Sistolica_mmHg": {
+      "min": 85,
+      "max": 226,
+      "default": 122,
+      "integer": true
+    },
+    "Colesterol_mg_dL": {
+      "min": 115,
+      "max": 266,
+      "default": 188,
+      "integer": true
+    },
+    "Actividad_Fisica": {
+      "options": [
+        "Alta",
+        "Baja",
+        "Moderada"
+      ]
+    },
+    "Fumador": {
+      "options": [
+        "No",
+        "Sí"
+      ]
+    },
+    "Horas_Sueno": {
+      "min": 4.3,
+      "max": 9.8,
+      "default": 7.1,
+      "integer": false
+    },
+    "Nivel_Estres": {
+      "min": 1,
+      "max": 10,
+      "default": 5,
+      "integer": true
+    },
+    "Consultas_Medicas": {
+      "min": 0,
+      "max": 9,
+      "default": 2,
+      "integer": true
+    },
+    "Mes_Numero": {
+      "options": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  },
+  "test_count": 125,
+  "metrics": {
+    "Accuracy": 0.856,
+    "Precision_macro": 0.8582199546485261,
+    "Recall_macro": 0.8619608519940746,
+    "F1_macro": 0.8591526710212634
+  },
+  "cv_mean": 0.842226388033567,
+  "cv_std": 0.02983031988609123,
+  "class_metrics": {
+    "Bajo": {
+      "precision": 0.925,
+      "recall": 0.8604651162790697,
+      "f1-score": 0.891566265060241,
+      "support": 43.0
+    },
+    "Medio": {
+      "precision": 0.8163265306122449,
+      "recall": 0.8163265306122449,
+      "f1-score": 0.8163265306122449,
+      "support": 49.0
+    },
+    "Alto": {
+      "precision": 0.8333333333333334,
+      "recall": 0.9090909090909091,
+      "f1-score": 0.8695652173913043,
+      "support": 33.0
+    }
+  },
+  "matrix": [
+    [
+      37,
+      6,
+      0
+    ],
+    [
+      3,
+      40,
+      6
+    ],
+    [
+      0,
+      3,
+      30
+    ]
+  ],
+  "distribution": {
+    "Bajo": 169,
+    "Medio": 196,
+    "Alto": 132
+  },
+  "glucose": {
+    "Bajo": 92.0,
+    "Medio": 103.0,
+    "Alto": 119.0
+  },
+  "activity": {
+    "Baja": {
+      "Bajo": 18.0,
+      "Medio": 39.5,
+      "Alto": 42.4
+    },
+    "Moderada": {
+      "Bajo": 37.4,
+      "Medio": 40.2,
+      "Alto": 22.4
+    },
+    "Alta": {
+      "Bajo": 53.3,
+      "Medio": 37.4,
+      "Alto": 9.3
+    }
+  }
+}
